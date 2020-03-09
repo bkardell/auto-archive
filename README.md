@@ -65,6 +65,7 @@ with the field `snapshotURL`  ala
 { "snapshotURL": "https://bkardell.com/blog/TowardResponsive.html"}
 ```
 
+Note though, if you're opting for this level, it seems that you can/probably have been able to do this by simply constructing a GET request yourself already that appends the URL to the `/save` path, so this potentially doesn't buy you a whole lot beyond a potentially simpler, slightly more uniform surface... And maybe provides me an opportunity to centralize some discussion.
 
 ## Can I make help?
 Yeah...
