@@ -37,11 +37,13 @@ The webhook will let the worker know when your site is updated. However, because
 
 ```json
 {   
-  "rss.json": "https://raw.githubusercontent.com/bkardell/bkardell.github.io/master/blog/feed.json"   
+  "rss": "https://raw.githubusercontent.com/bkardell/bkardell.github.io/master/blog/feed.rss"   
 }
 ```
 
-Cool - that's it.  When a 'publish' happens, it will notify the service, look for this file, find your RSS feed (currenly only the JSON version, but if this goes anywhere I'll expand it) and request a snapshot of the most recent item in it.
+Cool - that's it.  When a 'publish' happens, it will notify the service, look for this file, find your RSS feed and request a snapshot of the most recent item in it.
+
+(note: if you have a `feed.json` instead, you can use the property `rss.json` to point to that instead)
 
 ## Option 2: RSS 'Touch'
 If option 1 isn't convenient for you, but you have some way to know that something new has published, you can simply toss the URL of your RSS feed at it when that happens and it will request snapshotting of the most recent item.
@@ -49,14 +51,15 @@ If option 1 isn't convenient for you, but you have some way to know that somethi
 Just `POST` directly to `https://dawn-rain-4cff.bkardell.workers.dev/`. Make sure you set the `'content-type': 'application/json'` header and send a body containing JSON with the field `feedLocator`  ala   
   
 ```json  
-{ "feedLocator": "https://bkardell.com/blog/feed.json"}
+{ "feedLocator": "https://bkardell.com/blog/feed.rss"}
 ```
 
 
 ## Option 3: Just the URL
 Or, if you have a lot of control and are totally comfortable/know exactly what changed and when - you can call it however you like (even CURL) and provide it the URL to the new content directly...
 
-Just `POST` directly to `https://dawn-rain-4cff.bkardell.workers.dev/`. Make sure you set the `'content-type': 'application/json'` header and send a body containing JSON with the field `snapshotURL`  ala   
+Just `POST` directly to `https://dawn-rain-4cff.bkardell.workers.dev/`. Make sure you set the `'content-type': 'application/json'` header and send a body containing 
+with the field `snapshotURL`  ala   
   
 ```json  
 { "snapshotURL": "https://bkardell.com/blog/TowardResponsive.html"}
