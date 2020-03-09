@@ -15,7 +15,7 @@ It depends!
 Because the aim is to make integration easy as possible with existing setups and low-friction despite wild variance in how people do things.
 
 Depending on how much control you have, and what your setup is, different things will work for you.  Personally, I build my site via a (custom) static site generator  and 
-host my domain (https://bkardell.com) on GitHub pages.  For me, integration with GitHub Pages (option 1 below) is the lowest friction solution - it takes about 5 minutes to setup.  Your mileage will vary, and but I'd like to give you easy options.
+host my domain (https://bkardell.com) on GitHub pages.  For me, integration with GitHub Pages (option 1 below) is the lowest friction solution - it takes about 5 minutes to setup.  Your mileage will vary though depending on lots of details about your setup, so I'd like to give you easy options too.
 
 Generally speaking, there are two "ways" this is done - one is by you directly providing a URL to request be snapshotted. This is great if you can plug into it easily.  The other is to point to your RSS feed where the newest item will be requested.
 
