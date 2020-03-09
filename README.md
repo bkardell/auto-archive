@@ -20,7 +20,7 @@ host my domain (https://bkardell.com) on GitHub pages.  For me, integration with
 Generally speaking, there are two "ways" this is done - one is by you directly providing a URL to request be snapshotted. This is great if you can plug into it easily.  The other is to point to your RSS feed where the newest item will be requested.
 
 ### Option 1: GitHub Pages integration
-This is in some ways the most complex, but actually the most convenient if you use GitHub Pages.  It works by plugging into  webhooks...
+This is in some ways the most complex, but actually the most convenient if you use GitHub Pages.  It works by plugging into  webhooks - and I _think_ everything just snaps into the right place and time. It's always based off you RSS feed, so you won't accidentally request an archive for a thing that doesn't exist yet, or something that's not ready yet.  So... Simple, actually. 
 
 ### Setting up the hook itself
 1. In the repo for your site, click 'settings'
