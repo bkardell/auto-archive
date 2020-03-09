@@ -1,113 +1,72 @@
-# CSS Element Queries
+# Auto-archive experiment
+
+## What is this
+It is an experimental and usable solution to the problem laid out in [Making Sure My Content Lives On](https://bkardell.com/blog/ArchivingByDefault.html).
+If you're unfamilliar with the problem, go have a read - if you just want to see how to use it, this is the URL for you...
 
 
-[![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/marcj/css-element-queries?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge)
+## How it works...
+At a low level, you send an HTTP Post to a service at `https://dawn-rain-4cff.bkardell.workers.dev/`, with the content-type `application/json` and provide some stuff in the body.  This lets the Internet Archive know that you've published something new and requests that it be snapshotted and archived.
 
-Element Queries is a polyfill adding support for element based media-queries to all new browsers (incl. IE7+).
-It allows not only to define media-queries based on window-size but also adds 'media-queries' functionality depending on element (any selector supported)
-size while not causing performance lags due to event based implementation.
+### What stuff do I put in the body?
+It depends!
 
-It's a proof-of-concept event-based CSS element dimension query with valid CSS selector syntax.
+### Why?!
+Because the aim is to make integration easy as possible with existing setups and low-friction despite wild variance in how people do things.
 
-Features:
+Depending on how much control you have, and what your setup is, different things will work for you.  Personally, I build my site via a (custom) static site generator  and 
+host my domain (https://bkardell.com) on GitHub pages.  For me, integration with GitHub Pages (option 1 below) is the lowest friction solution - it takes about 5 minutes to setup.  Your mileage will vary, and but I'd like to give you easy options.
 
- - no performance issues since it listens only on size changes of elements that have element query rules defined through css. Other element query polifills only listen on `window.onresize` which causes performance issues and allows only to detect changes via window.resize event and not inside layout changes like css3 animation, :hover, DOM changes etc.
- - no interval/timeout detection. Truly event-based through integrated ResizeSensor class.
- - automatically discovers new DOM elements. No need to call javascript manually.
- - no CSS modifications. Valid CSS Syntax
- - all CSS selectors available. Uses regular attribute selector. No need to write rules in HTML/JS.
- - supports and tested in webkit, gecko and IE(10+)
- - `min-width`, `min-height`, `max-width` and `max-height` are supported so far
- - works with any layout modifications: HTML (innerHTML etc), inline styles, DOM mutation, CSS3 transitions, fluid layout changes (also percent changes), pseudo classes (:hover etc.), window resizes and more
- - no Javascript-Framework dependency (works with jQuery, Mootools, etc.)
- - Works beautiful for responsive images without FOUC
+Generally speaking, there are two "ways" this is done - one is by you directly providing a URL to request be snapshotted. This is great if you can plug into it easily.  The other is to point to your RSS feed where the newest item will be requested.
 
-More demos and information: http://marcj.github.io/css-element-queries/
+### Option 1: GitHub Pages integration
+This is in some ways the most complex, but actually the most convenient if you use GitHub Pages.  It works by plugging into  webhooks...
 
-## Examples
+### Setting up the hook itself
+1. In the repo for your site, click 'settings'
+2. From the menu on the left, choose 'Webhooks'
+3. Click the 'Add webhook' button
+4. Set the Payload URL to `https://dawn-rain-4cff.bkardell.workers.dev/`
+5. Set the Content Type to `application/json`
+6. Choose the `Let me select individual events.` radio button  
+7. Check only the "Page builds" checkbox
+8. Save the webhook
 
-### Element Query
+### RSS Integration
+The webhook will let the worker know when your site is updated. However, because you can host on any domain we'll need a way to find this. To wit, in the root of your repo, add a file called `path.to.rss` which contains a URL where your rss feed can be found.  Here's what mine looks like  
 
-```css
-.widget-name h2 {
-    font-size: 12px;
-}
-
-.widget-name[min-width~="400px"] h2 {
-    font-size: 18px;
-}
-
-.widget-name[min-width~="600px"] h2 {
-    padding: 55px;
-    text-align: center;
-    font-size: 24px;
-}
-
-.widget-name[min-width~="700px"] h2 {
-    font-size: 34px;
-    color: red;
+```json
+{   
+  "rss.json": "https://raw.githubusercontent.com/bkardell/bkardell.github.io/master/blog/feed.json"   
 }
 ```
 
-As you can see we use the `~=` [attribute selector](https://developer.mozilla.org/en-US/docs/Web/CSS/Attribute_selectors).
-Since this css-element-queries polyfill adds new element attributes on the DOM element
-(`<div class="widget-name" min-width="400px 700px"></div>`) depending on your actual CSS and element's dimension,
-you should always use this attribute selector (especially if you have several element query rules on the same element).
+Cool - that's it.  When a 'publish' happens, it will notify the service, look for this file, find your RSS feed (currenly only the JSON version, but if this goes anywhere I'll expand it) and request a snapshot of the most recent item in it.
 
-```html
-<div class="widget-name">
-   <h2>Element responsiveness FTW!</h2>
-</div>
+## Option 2: RSS 'Touch'
+If option 1 isn't convenient for you, but you have some way to know that something new has published, you can simply toss the URL of your RSS feed at it when that happens and it will request snapshotting of the most recent item.
+
+Just `POST` directly to `https://dawn-rain-4cff.bkardell.workers.dev/`. Make sure you set the `'content-type': 'application/json'` header and send a body containing JSON with the field `feedLocator`  ala   
+  
+```json  
+{ "feedLocator": "https://bkardell.com/blog/feed.json"}
 ```
 
-### Responsive image
 
-```html
-    <div data-responsive-image>
-        <img data-src="http://placehold.it/350x150"/>
-        <img min-width="350" data-src="http://placehold.it/700x300"/>
-        <img min-width="700" data-src="http://placehold.it/1400x600"/>
-    </div>
+## Option 3: Just the URL
+Or, if you have a lot of control and are totally comfortable/know exactly what changed and when - you can call it however you like (even CURL) and provide it the URL to the new content directly...
+
+Just `POST` directly to `https://dawn-rain-4cff.bkardell.workers.dev/`. Make sure you set the `'content-type': 'application/json'` header and send a body containing JSON with the field `snapshotURL`  ala   
+  
+```json  
+{ "snapshotURL": "https://bkardell.com/blog/TowardResponsive.html"}
 ```
 
-Include the javascript files at the bottom and you're good to go. No custom javascript calls needed.
 
-```html
-<script src="src/ResizeSensor.js"></script>
-<script src="src/ElementQueries.js"></script>
-```
+## Can I make help?
+Yeah...
 
-## See it in action:
-
-Here live http://marcj.github.io/css-element-queries/.
-
-![Demo](http://marcj.github.io/css-element-queries/images/css-element-queries-demo.gif)
-
-
-## Module Loader
-
-If you're using a module loader you need to trigger the event listening or initialization yourself:
-
-```javascript
-var ElementQueries = require('css-element-queries/src/ElementQueries');
-
- //attaches to DOMLoadContent
-ElementQueries.listen();
-
-//or if you want to trigger it yourself.
-// Parse all available CSS and attach ResizeSensor to those elements which have rules attached
-// (make sure this is called after 'load' event, because CSS files are not ready when domReady is fired.
-ElementQueries.init();
-```
-
-## Issues
-
- - So far does not work on `img` and other elements that can't contain other elements. Wrapping with a `div` works fine though (See demo).
- - Adds additional hidden elements into selected target element and forces target element to be relative or absolute.
- - Local stylesheets do not work (using `file://` protocol).
- - If you have rules on an element that has a css animation, also add `element-queries`. E.g. `.widget-name { animation: 2sec my-animation, 1s element-queries;}`. We use this to detect new added DOM elements automatically.
-
-## License
-
-MIT license. Copyright [Marc J. Schmidt](https://twitter.com/MarcJSchmidt).
-# auto-archive
+1. Let me know what you think about the idea, try it out
+2. If you set it up for some popular system, let me know how and we'll add some documentation here
+3. Let me know how it could be better!
+4. Tell someone else?
