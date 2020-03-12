@@ -1,9 +1,7 @@
 # Auto-archive experiment
 
 ## What is this
-It is an experimental and usable solution to the problem laid out in [Making Sure My Content Lives On](https://bkardell.com/blog/ArchivingByDefault.html).
-If you're unfamilliar with the problem, go have a read - if you just want to see how to use it, this is the URL for you...
-
+It would be useful to me (and lots of others) if it were easy to integrate a 'notify the internet archive I've published a new post so I can be sure it lives on despite all kinds of uncertainties - described in much more detail in [Making Sure My Content Lives On](https://bkardell.com/blog/ArchivingByDefault.html).  This repo documents some (hopfully) easy/flexible solution to this problem ..
 
 ## How it works...
 At a low level, you send an HTTP Post to a service at `https://dawn-rain-4cff.bkardell.workers.dev/`, with the content-type `application/json` and provide some stuff in the body.  This lets the Internet Archive know that you've published something new and requests that it be snapshotted and archived.
@@ -67,8 +65,8 @@ with the field `snapshotURL`  ala
 
 Note though, if you're opting for this level, it seems that you can/probably have been able to do this by simply constructing a GET request yourself already that appends the URL to the `/save` path, so this potentially doesn't buy you a whole lot beyond a potentially simpler, slightly more uniform surface... And maybe provides me an opportunity to centralize some discussion.
 
-## Can I make help?
-Yeah...
+## Can I help?
+Defintely!
 
 1. Let me know what you think about the idea, try it out
 2. If you set it up for some popular system, let me know how and we'll add some documentation here
