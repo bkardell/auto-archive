@@ -20,28 +20,8 @@ Generally speaking, there are two "ways" this is done - one is by you directly p
 ### Option 1: GitHub Pages integration
 This is in some ways the most complex, but actually the most convenient if you use GitHub Pages.  It works by plugging into  webhooks - and I _think_ everything just snaps into the right place and time. It's always based off you RSS feed, so you won't accidentally request an archive for a thing that doesn't exist yet, or something that's not ready yet.  So... Simple, actually. 
 
-### Setting up the hook itself
-1. In the repo for your site, click 'settings'
-2. From the menu on the left, choose 'Webhooks'
-3. Click the 'Add webhook' button
-4. Set the Payload URL to `https://dawn-rain-4cff.bkardell.workers.dev/`
-5. Set the Content Type to `application/json`
-6. Choose the `Let me select individual events.` radio button  
-7. Check only the "Page builds" checkbox
-8. Save the webhook
+Check out the [setup for github pages integration](github-pages-webhooks.md)
 
-### RSS Integration
-The webhook will let the worker know when your site is updated. However, because you can host on any domain we'll need a way to find this. To wit, in the root of your repo, add a file called `path.to.rss` which contains a URL where your rss feed can be found.  Here's what mine looks like  
-
-```json
-{   
-  "rss": "https://raw.githubusercontent.com/bkardell/bkardell.github.io/master/blog/feed.rss"   
-}
-```
-
-Cool - that's it.  When a 'publish' happens, it will notify the service, look for this file, find your RSS feed and request a snapshot of the most recent item in it.
-
-(note: if you have a `feed.json` instead, you can use the property `rss.json` to point to that instead)
 
 ## Option 2: RSS 'Touch'
 If option 1 isn't convenient for you, but you have some way to know that something new has published, you can simply toss the URL of your RSS feed at it when that happens and it will request snapshotting of the most recent item.
