@@ -23,7 +23,7 @@ This is in some ways the most complex, but actually the most convenient if you u
 Check out the [setup for github pages integration](github-pages-webhooks.md)
 
 ## Options 2: Wordpress integration
-Super easy and convenient setup for [integration with Wordpress](wordpress-integration.md) contributed by @sil
+Super easy and convenient setup for [integration with Wordpress](wordpress-integration.md) contributed by @stuartlangridge
 
 ## Option 3: RSS 'Touch'
 If option 1 isn't convenient for you, but you have some way to know that something new has published, you can simply toss the URL of your RSS feed at it when that happens and it will request snapshotting of the most recent item.
